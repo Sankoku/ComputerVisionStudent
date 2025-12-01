@@ -22,11 +22,11 @@ SPEED_MULTIPLIER = 3      # Прискорення: 1=normal, 2=2x швидше,
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 print(f"🔍 Device: {device}")
 
-# Калібрування baseline (збільшено для стабільності)
+# Калібрування baseline
 BASELINE_FRAMES = 90  # ~3 секунди при 30 FPS (було 50)
 EMA_ALPHA = 0.3  # Згладжування
 
-# Пороги уваги (на основі досліджень про класифікацію engagement)
+# Пороги уваги 
 SCORE_ATTENTIVE = 0.70  # Уважний
 SCORE_NEUTRAL = 0.50    # Нейтральний
 SCORE_DISTRACTED = 0.30 # Відволікся
@@ -37,7 +37,7 @@ HAND_RAISED_MIN_FRAMES = 15  # Мінімум кадрів з піднятою �
 FPS = 30.0
 
 # Трекінг
-IOU_MATCH_THRESH = 0.15  # Підвищено для кращого матчінгу (було 0.08)
+IOU_MATCH_THRESH = 0.15 
 MAX_MISSED_FRAMES = 150  # ~5 секунд
 
 # ================== ІНІЦІАЛІЗАЦІЯ ==================
@@ -73,7 +73,7 @@ print(f"⚡ Speed multiplier: {SPEED_MULTIPLIER}x (processing every {SPEED_MULTI
 if max_frames:
     print(f"📊 Will process ~{max_frames // SPEED_MULTIPLIER} frames total")
 
-# ================== ФУНКЦІЇ (покращені на основі досліджень) ==================
+# ================== ФУНКЦІЇ ==================
 
 def bbox_from_kp(kp):
     """Створює bounding box з keypoints"""
@@ -240,7 +240,7 @@ def student_attention_score(features, baseline):
     # 1. Підняті руки - сильний позитивний сигнал (+2.0)
     score += 2.0 * hands_up
     
-    # 2. Орієнтація голови (найважливіший фактор за дослідженнями)
+    # 2. Орієнтація голови (найважливіший фактор)
     # Pitch: голова дивиться вгору = добре, вниз = погано
     score += 1.2 * max(0.0, 1.0 - abs(pitch_dev * 1.5))
     score -= 1.5 * max(0.0, pitch_dev * 1.0)  # Штраф за нахил вниз
@@ -264,7 +264,7 @@ def student_attention_score(features, baseline):
     return float(1.0 / (1.0 + np.exp(-score)))
 
 # ================== ОСНОВНИЙ ЦИКЛ ==================
-print("\n🚀 Починаємо обробку... (Натисни 'q' для зупинки)\n")
+print("\nПочинаємо обробку... (Натисни 'q' для зупинки)\n")
 t0 = time.time()
 
 while True:
@@ -516,15 +516,15 @@ with open("activity_scientific.csv", "w", newline="", encoding='utf-8') as f:
     writer.writeheader()
     writer.writerows(activity_log)
 
-print("\n✅ Завершено!")
-print(f"📊 Оброблено {processed_frames} кадрів (з {frame_id} у відео) за {time.time()-t0:.1f}с")
-print(f"⚡ Реальна швидкість обробки: {processed_frames/(time.time()-t0):.1f} FPS")
-print(f"⏱️  Проаналізовано {frame_id/FPS/60:.1f} хвилин відео")
-print("💾 Збережено: activity_scientific.csv, output_scientific.mp4")
+print("\n Завершено!")
+print(f" Оброблено {processed_frames} кадрів (з {frame_id} у відео) за {time.time()-t0:.1f}с")
+print(f" Реальна швидкість обробки: {processed_frames/(time.time()-t0):.1f} FPS")
+print(f"  Проаналізовано {frame_id/FPS/60:.1f} хвилин відео")
+print("  Збережено: activity_scientific.csv, output_scientific.mp4")
 
 # ===== ВІЗУАЛІЗАЦІЯ СТАТИСТИКИ =====
 if len(activity_log) > 0:
-    print("\n📈 Генерація графіків...")
+    print("\n Генерація графіків...")
 
     times = [d['time_sec'] for d in activity_log]
     visible = [d['visible'] for d in activity_log]
@@ -604,7 +604,7 @@ if len(activity_log) > 0:
 
     plt.tight_layout()
     plt.savefig('activity_statistics_scientific.png', dpi=300, bbox_inches='tight')
-    print("✅ Збережено: activity_statistics_scientific.png")
+    print(" Збережено: activity_statistics_scientific.png")
 
     # ===== ПІДСУМКОВА СТАТИСТИКА =====
     print("\n" + "="*70)
@@ -615,24 +615,24 @@ if len(activity_log) > 0:
     total_minutes = int(total_time // 60)
     total_seconds = int(total_time % 60)
     
-    print(f"⏱️  Тривалість відео: {total_time:.1f} секунд ({total_minutes}:{total_seconds:02d})")
-    print(f"🎬 Оброблено кадрів: {processed_frames}")
-    print(f"⚡ Середній FPS обробки: {processed_frames/total_time:.1f}")
-    print(f"👥 Середня кількість учнів: {np.mean(visible):.1f}")
-    print(f"👥 Максимум учнів на екрані: {max(visible)}")
+    print(f"  Тривалість відео: {total_time:.1f} секунд ({total_minutes}:{total_seconds:02d})")
+    print(f" Оброблено кадрів: {processed_frames}")
+    print(f" Середній FPS обробки: {processed_frames/total_time:.1f}")
+    print(f" Середня кількість учнів: {np.mean(visible):.1f}")
+    print(f" Максимум учнів на екрані: {max(visible)}")
     print()
-    print(f"✅ Середня кількість уважних: {np.mean(attentive):.2f}")
-    print(f"😐 Середня кількість нейтральних: {np.mean(neutral):.2f}")
-    print(f"😕 Середня кількість відволіканих: {np.mean(distracted):.2f}")
-    print(f"❌ Середня кількість неуважних: {np.mean(inattentive):.2f}")
+    print(f" Середня кількість уважних: {np.mean(attentive):.2f}")
+    print(f" Середня кількість нейтральних: {np.mean(neutral):.2f}")
+    print(f" Середня кількість відволіканих: {np.mean(distracted):.2f}")
+    print(f" Середня кількість неуважних: {np.mean(inattentive):.2f}")
     print()
-    print(f"✋ Всього підняттів рук: {sum(hands_up)}")
-    print(f"✋ Середня кількість піднятих рук: {np.mean(hands_up):.2f}")
-    print(f"✋ Максимум піднятих рук одночасно: {max(hands_up)}")
+    print(f" Всього підняттів рук: {sum(hands_up)}")
+    print(f" Середня кількість піднятих рук: {np.mean(hands_up):.2f}")
+    print(f" Максимум піднятих рук одночасно: {max(hands_up)}")
     print()
-    print(f"📊 Середній індекс уваги класу: {np.mean(attention_index):.3f}")
-    print(f"📊 Мінімальний індекс уваги: {min(attention_index):.3f}")
-    print(f"📊 Максимальний індекс уваги: {max(attention_index):.3f}")
+    print(f" Середній індекс уваги класу: {np.mean(attention_index):.3f}")
+    print(f" Мінімальний індекс уваги: {min(attention_index):.3f}")
+    print(f" Максимальний індекс уваги: {max(attention_index):.3f}")
     print()
     
     # Відсоток часу в різних станах
@@ -643,16 +643,17 @@ if len(activity_log) > 0:
         pct_distracted = 100 * sum(distracted) / total_student_time
         pct_inattentive = 100 * sum(inattentive) / total_student_time
         
-        print("📈 РОЗПОДІЛ ЧАСУ УВАГИ:")
-        print(f"  ✅ Уважні: {pct_attentive:.1f}%")
-        print(f"  😐 Нейтральні: {pct_neutral:.1f}%")
-        print(f"  😕 Відволікаються: {pct_distracted:.1f}%")
-        print(f"  ❌ Неуважні: {pct_inattentive:.1f}%")
+        print(" РОЗПОДІЛ ЧАСУ УВАГИ:")
+        print(f"   Уважні: {pct_attentive:.1f}%")
+        print(f"   Нейтральні: {pct_neutral:.1f}%")
+        print(f"   Відволікаються: {pct_distracted:.1f}%")
+        print(f"   Неуважні: {pct_inattentive:.1f}%")
     
     print("="*70)
 
     plt.show()
 else:
-    print("⚠️  Недостатньо даних для графіків")
+    print("  Недостатньо даних для графіків")
+
 
 print("\n🎓 Аналіз завершено! Використовуй графіки для дипломної роботи.")
