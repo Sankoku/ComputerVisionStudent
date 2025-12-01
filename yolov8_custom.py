@@ -65,13 +65,13 @@ max_frames = None
 if MAX_DURATION_MINUTES is not None:
     max_frames = int(MAX_DURATION_MINUTES * 60 * FPS)
 
-print(f"📹 Video: {w}x{h} @ {FPS:.1f} FPS")
-print(f"⚙️  Baseline: {BASELINE_FRAMES} frames ({BASELINE_FRAMES/FPS:.1f}s)")
-print(f"⚙️  IOU threshold: {IOU_MATCH_THRESH}")
-print(f"⏱️  Duration limit: {MAX_DURATION_MINUTES} min" if MAX_DURATION_MINUTES else "⏱️  Duration: Full video")
-print(f"⚡ Speed multiplier: {SPEED_MULTIPLIER}x (processing every {SPEED_MULTIPLIER} frame)")
+print(f"  Video: {w}x{h} @ {FPS:.1f} FPS")
+print(f"  Baseline: {BASELINE_FRAMES} frames ({BASELINE_FRAMES/FPS:.1f}s)")
+print(f"  IOU threshold: {IOU_MATCH_THRESH}")
+print(f"  Duration limit: {MAX_DURATION_MINUTES} min" if MAX_DURATION_MINUTES else "⏱️  Duration: Full video")
+print(f"  Speed multiplier: {SPEED_MULTIPLIER}x (processing every {SPEED_MULTIPLIER} frame)")
 if max_frames:
-    print(f"📊 Will process ~{max_frames // SPEED_MULTIPLIER} frames total")
+    print(f" Will process ~{max_frames // SPEED_MULTIPLIER} frames total")
 
 # ================== ФУНКЦІЇ ==================
 
@@ -274,7 +274,7 @@ while True:
     
     # Перевірка ліміту часу
     if max_frames is not None and frame_id >= max_frames:
-        print(f"\n⏱️  Досягнуто ліміт часу: {MAX_DURATION_MINUTES} хвилин")
+        print(f"\n  Досягнуто ліміт часу: {MAX_DURATION_MINUTES} хвилин")
         break
     
     # Прискорення: пропускаємо кадри
@@ -657,3 +657,4 @@ else:
 
 
 print("\n🎓 Аналіз завершено! Використовуй графіки для дипломної роботи.")
+
